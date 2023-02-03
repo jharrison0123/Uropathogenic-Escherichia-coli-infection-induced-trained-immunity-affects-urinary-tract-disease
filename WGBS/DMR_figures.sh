@@ -83,7 +83,11 @@ computeMatrix scale-regions -S \
 --afterRegionStartLength 5000 \
 --skipZeros -o WGBS_DMR_${base}_clustering_matrix.mat.gz \
 --outFileNameMatrix WGBS_DMR_${base}_clustering_matrix.tsv ; \
-plotHeatmap -m WGBS_DMR_${base}_clustering_matrix.mat.gz \
--out WGBS_DMR_${base}_clustering_heatmap.png \
---samplesLabel N1-WGBS N3-WGBS R1-WGBS R4-WGBS S1-WGBS S2-WGBS 
+
+plotProfile -m WGBS_DMR_${base}_clustering_matrix.mat.gz \
+--perGroup \
+--colors blue mediumBlue gold khaki mediumpurple slateblue \
+-out WGBS_DMR_${base}_clustering_profile.png  \
+--samplesLabel N1  N3 R1 R4 S1 S2 \
+--outFileNameData WGBS_DMR_${base}_clustering_profile.tsv
 
