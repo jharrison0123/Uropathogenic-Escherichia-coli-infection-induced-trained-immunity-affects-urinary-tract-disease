@@ -1,4 +1,4 @@
-#!/opt/htcf/spack/opt/spack/linux-ubuntu16.04-x86_64/gcc-5.4.0/r-4.1.2-ci3qy2kafbeu3xjvjqp6x3uekfyl3ogq/bin/Rscript
+#R-4.1.2
 
 library(DSS)
 require(bsseq)
