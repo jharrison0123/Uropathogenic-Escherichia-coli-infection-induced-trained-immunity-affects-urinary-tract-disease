@@ -196,7 +196,7 @@ atac_mat <- dmr.norm.mat.diff.locus(peak.bed.vec = atac_bw.vec, peak.bed.df = at
 t_atac.mat <-  scale((t(as.data.frame(atac_mat))), center = F, scale = apply((t(as.data.frame(atac_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
 t_atac.mat[is.na(t_atac.mat)] <- 0
 dimnames(t_atac.mat) <- dimnames(atac_mat)
-atac <- Heatmap(matrix = (t_atac.mat), show_row_names = F, column_title = "ATAC" , cluster_columns = FALSE , column_title_gp = gpar(fontsize = 9,fontface = "bold") ,column_names_gp = gpar(fontsize = 9) , heatmap_legend_param = list(title = "ATAC"),border=T, width = 4, height=5, col=( c( "white", "darkgreen")))
+atac <- Heatmap(matrix = (t_atac.mat), show_row_names = F, column_title = "ATAC" , cluster_columns = FALSE , column_title_gp = gpar(fontsize = 9,fontface = "bold") ,column_names_gp = gpar(fontsize = 9) , heatmap_legend_param = list(title = "ATAC"),border=T, width = 4, height=5, col=( c( "white", "darkblue")))
 
 
 ############################ H3K4me3 #############################
@@ -220,7 +220,9 @@ f2 = colorRamp2(seq(min(t_H3K4Me3.mat), max(t_H3K4Me3.mat), length = 3), c( "#E0
 H3K4Me3 <- Heatmap(matrix = (t_H3K4Me3.mat), show_row_names = F ,column_title = "H3K4Me3" , column_title_gp = gpar(fontsize = 9,fontface = "bold") ,width = 4, height=5,column_names_gp = gpar(fontsize = 9), cluster_columns = FALSE , heatmap_legend_param = list(title = "H3K4Me3"),border=T, col = ( c( "white", "darkorange")))
                      
 
-###H3K27Ac
+############################ H3K27Ac ############################
+#################################################################
+        
 H3K27Ac_bw.dir <- "/scratch/jharrison/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned"
 H3K27Ac_fastq.df <- read.table("/scratch/jharrison/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned/H3K27ac_narrowPeaks.txt", header = T, sep= "\t")[1:6, ]
 H3K27Ac_fastq.df$bw <- sapply(H3K27Ac_fastq.df$File.Name, function(x) {
@@ -229,23 +231,21 @@ H3K27Ac_fastq.df$bw <- sapply(H3K27Ac_fastq.df$File.Name, function(x) {
 })
 H3K27Ac_bw.vec <- H3K27Ac_fastq.df$bw
 names(H3K27Ac_bw.vec) <- H3K27Ac_fastq.df$Sample.Name
-#dmr.bed <- "/scratch/jharrison/Seongmi/WGBS/analysis/combined_DMRs.bed"
+#use WGBS_DMR granges to obtain DMRs rownames in WGBS heatmap
+
 H3K27Ac_mat <- dmr.norm.mat.diff.locus(peak.bed.vec = H3K27Ac_bw.vec, peak.bed.df = H3K27Ac_fastq.df,dmr.gr = WGBS_DMRs.gr, threads = 10)
 col_fun = colorRamp2(c(1000, 0), c("green", "white"))
 
-#S_H3K27Ac_mat <-  t(scale((transpose(as.data.frame(H3K27Ac_mat))), center = F))
-#H3K27Ac_mat_plot <- Heatmap(matrix = (S_H3K27Ac_mat), show_row_names = F , column_title = "H3K27Ac" , column_title_gp = gpar(fontsize = 10) , col = ( c( "white", "purple")), cluster_columns = FALSE , border=F, heatmap_legend_param = list(title = "H3K27Ac")) ##not using because if no peaks in any sample gives NA-but should be zero because there are no peaks
-  
 t_H3K27Ac.mat <-scale((t(as.data.frame(H3K27Ac_mat))), center = F, scale = apply((t(as.data.frame(H3K27Ac_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
 t_H3K27Ac.mat[is.na(t_H3K27Ac.mat)] <- 0
 dimnames(t_H3K27Ac.mat) <- dimnames(H3K27Ac_mat)
 f2 = colorRamp2(seq(min(t_H3K27Ac.mat), max(t_H3K27Ac.mat), length = 3), c("#FF7100","#EEEEEE","#00DADE"))
 H3K27Ac <- Heatmap(matrix = (t_H3K27Ac.mat), show_row_names = F , column_title = "H3K27ac" , column_title_gp = gpar(fontsize = 9,fontface = "bold") , width = 4, height=5, column_names_gp = gpar(fontsize = 9), col = ( c( "white", "purple")), cluster_columns = FALSE ,border=T, heatmap_legend_param = list(title = "H3K27Ac"))
 
-H3K27Ac
 
-
-###H3K27Me3
+############################### H3K27Me3 ############################
+######################################################################
+        
 H3K27Me3_bw.dir <- "/scratch/jharrison/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned"
 H3K27Me3_fastq.df <- read.table("/scratch/jharrison/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned/H3K27me3_broadPeaks.txt", header = T, sep= "\t")[1:6, ]
 H3K27Me3_fastq.df$bw <- sapply(H3K27Me3_fastq.df$File.Name, function(x) {
@@ -254,13 +254,7 @@ H3K27Me3_fastq.df$bw <- sapply(H3K27Me3_fastq.df$File.Name, function(x) {
 })
 H3K27Me3_bw.vec <- H3K27Me3_fastq.df$bw
 names(H3K27Me3_bw.vec) <- H3K27Me3_fastq.df$Sample.Name
-#dmr.bed <- "/scratch/jharrison/Seongmi/WGBS/analysis/combined_DMRs.bed"
 H3K27Me3_mat <- dmr.broad.norm.mat.diff.locus(peak.bed.vec = H3K27Me3_bw.vec, peak.bed.df = H3K27Me3_fastq.df,dmr.gr = WGBS_DMRs.gr, threads = 10)
-
-#S_H3K27Me3.mat <-  scale(H3K27Me3_mat, center = F)
-#S_H3K27Me3 <- Heatmap(matrix = (S_H3K27Me3.mat), show_row_names = F , column_title = "H3K27Me3" , column_title_gp = gpar(fontsize = 10) , col = ( c( "white", "darkred")), cluster_columns = FALSE , border=F, heatmap_legend_param = list(title = "H3K27Me3"))
-
-
 
 
 t_H3K27Me3.mat <-  scale((t(as.data.frame(H3K27Me3_mat))), center = F, scale = apply((t(as.data.frame(H3K27Me3_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
@@ -268,16 +262,26 @@ t_H3K27Me3.mat[is.na(t_H3K27Me3.mat)] <- 0
 dimnames(t_H3K27Me3.mat) <- dimnames(H3K27Me3_mat)
 f2 = colorRamp2(seq(min(t_H3K27Me3.mat), max(t_H3K27Me3.mat), length = 3), c("#006DE8", "#EEEEEE", "#E87B00"))
 H3K27Me3 <- Heatmap(matrix = (t_H3K27Me3.mat),width = 4, height=5,  show_row_names = F , column_title = "H3K27Me3" , column_title_gp = gpar(fontsize = 9,fontface = "bold") ,column_names_gp = gpar(fontsize = 9), col = ( c( "white", "darkred")), cluster_columns = FALSE , border=T, heatmap_legend_param = list(title = "H3K27Me3"))
-H3K27Me3_plot <- draw
-#combined_narrow_inverse <- WGBS_s_4 + atac +  H3K27Ac + H3K4Me3 + H3K27Me3 
-  #combined_narrow_inverse    
-WGBS + H3K27Me3
 
-print(dim(atac_mat))
-print(dim(H3K27Me3_mat))
-print(dim(H3K4Me3_mat))
-print(dim(H3K27Ac_mat))
-print(dim(WGBS_mat))
 
+        
+############## DMR heatmaps combined ################
+#####################################################
+
+combined_noH3K27me3 <- WGBS + atac +  H3K27Ac + H3K4Me3 
+combined_noH3K27me3
+
+pdf("S_specific_combined_narrow_cluster_FRIP_narrow_with_norm.pdf", width = 6, height = 6)
+combined_noH3K27me3
+dev.off()
+
+combined <- WGBS + atac +  H3K27Ac + H3K4Me3 + H3K27me3
+combined
+
+tiff("S_specific_combined_narrow_cluster_FRIP_narrow_with_H3K27me3_broad_norm.tiff", width = 6, height = 4)
+combined
+dev.off()
+
+##Casp1 graph made using bed file with casp1 location
 
 
