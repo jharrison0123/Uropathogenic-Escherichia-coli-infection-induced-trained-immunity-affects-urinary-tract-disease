@@ -7,6 +7,7 @@ setwd("1_diffbind")
 
 ## 1.1. read in data
 samples = read.csv("sample.csv")
+#usinng deduplicated bam and narrowpeak (H3K27Ac and H3K3me3) and broad (H3K27me3)
 samples_dba = dba(sampleSheet=samples)
 
 ## 1.2. get count matrix
