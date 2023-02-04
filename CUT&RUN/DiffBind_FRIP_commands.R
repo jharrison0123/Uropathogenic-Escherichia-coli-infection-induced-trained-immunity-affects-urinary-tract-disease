@@ -11,8 +11,6 @@ samples_dba = dba(sampleSheet=samples)
 
 ## 1.2. get count matrix
 samples_count = dba.count(samples_dba) 
-#output normalized counts
-cutandrun_counts <- dba.peakset(samples_count, bRetrieve=T, DataType=DBA_DATA_FRAME)
-write.table(counts, file='/1_diffbind/normalized_count.txt', sep='\t', row.names = FALSE, col.names=TRUE, quote=FALSE)
+
 
 
