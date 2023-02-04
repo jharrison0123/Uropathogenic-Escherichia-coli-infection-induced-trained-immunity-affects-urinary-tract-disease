@@ -1,0 +1,7 @@
+SampleID,Tissue,Treatment,Replicate,bamReads,Peaks,PeakCaller
+N1_ATAC,N,ATAC,1,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Nai1.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_N.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
+N3_ATAC,N,ATAC,2,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Nai3.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_N.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
+R1_ATAC,R,ATAC,1,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Res1.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_R.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
+R4_ATAC,R,ATAC,2,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Res4.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_R.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
+S1_ATAC,S,ATAC,1,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Sen1.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_S.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
+S2_ATAC,S,ATAC,2,/scratch/jharrison/Seongmi/ATAC/processing/3_filtering/Hultgren_Sen2.filt.srt.nodup.bam,/scratch/jharrison/Seongmi/ATAC/peaks/Hultgren_S.filt.nodup.PE2SE.Rep1_Rep2.IDR0.05.filt.narrowPeak,bed
