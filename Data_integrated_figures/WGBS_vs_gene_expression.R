@@ -1,6 +1,16 @@
 #R 3.6.1
 
+# ComplexHeatmap 2.11.2
+# rtracklayer 1.44.4
+# dplyr 1.0.9 
+# devtools 2.2.1 
+# ggplot2 3.3.6
+# GenomicRanges 1.38.0
+#tidyverse 1.3.1 
+
+
 library(ComplexHeatmap)
+library(rtracklayer)
 library(dplyr)
 library(devtools)
 library(ggplot2)
