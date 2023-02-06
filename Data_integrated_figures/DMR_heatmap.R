@@ -1,7 +1,14 @@
-#R
+#R 3.6.1
+# ComplexHeatmap 2.11.2
+# rtracklayer 1.44.4
+# dplyr 1.0.9 
+# devtools)
+# ggplot2)
+# GenomicRanges)
+# GenomicFeatures)
+
 
 library(ComplexHeatmap)
-library(circlize)
 library(rtracklayer)
 library(dplyr)
 library(devtools)
