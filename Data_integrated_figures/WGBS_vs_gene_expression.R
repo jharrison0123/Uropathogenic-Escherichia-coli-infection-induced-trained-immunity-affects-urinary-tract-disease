@@ -18,14 +18,13 @@ DUC <- read.table(file="/RNA_infected/NRS_DUC_deseq2_norm[17].txt", header=T, se
 # WGBS_mat is WGBS DMR matrix with methylation values for Sensitized and Resolved USCs 
 ## comes from WGBS DMR heamap commands (see DMR heatmap R script)
 
-## Promoter annotation of Senstizied specific hyopDMRs- annotated using
+# Promoter and transcript annotation of Senstizied specific hyopDMRs- annotated using commands in DMR_figures.sh in WGBS dir under section :
+## DMR annotation of Sensitized-specific hypo-DMRs extracted from complexheatmap cluster1- hypo DMRs in sensitized samples
+
 promoter <- read.table(file="/WGBS/S_specific/DMRs_S_specific_cluster1_annotation.bed.PeakGenicIntersection_upstream_1kb.txt", quote="", header=F,fill = TRUE) %>% as.data.frame 
-
-
 transcripts <- read.table(file="/WGBS/S_specific/DMRs_S_specific_cluster1_annotation.bed.PeakGenic_intersection_promoter_genes.txt") %>% as.data.frame
+
 colnames(transcripts) <- c("dmr.locus","gene","ensemblID")
-
-
 DUC_DMR_promoter <- DUC[DUC$Gene.id %in% transcripts$ensemblID,] 
 DUC_DMR_promoter <- arrange(DUC_DMR_promoter, Gene.id)
 
@@ -47,8 +46,6 @@ names(DUC_DMR_WGBS_mat_V2)[names(DUC_DMR_WGBS_mat_V2) == 'Group.1'] <- 'Gene'
   
 
 #DMR vs RNA log2 fold change between sensitized and resolved
-
-
 
 ###################### RNA R vs S fold change ###################### 
 #################################################################### 
@@ -118,13 +115,13 @@ log_fc_df$Gene <- rownames(log_fc_df)
 
 log_fc_df <- log_fc_df[c(1:9,12,14),]
 
- write.table(log_fc_df, file= "/scratch/jharrison/Seongmi/WGBS/May_DMR/analysis/DMRs_S_specific_intersection_DMR_DUC_pbs_infection_log2_fc_DMR_promoter_df.txt", sep="\t", quote=F, row.names=FALSE)
+ write.table(log_fc_df, file= "/WGBS/analysis/DMRs_S_specific_intersection_DMR_DUC_pbs_infection_log2_fc_DMR_promoter_df.txt", sep="\t", quote=F, row.names=FALSE)
 
 
 log_fc_df_DMR_promoter_melt <- melt(log_fc_df,id.vars =c("Gene", "WGBS"), measure.vars = c("DUC_pbs","DUC_infec"))
 
 
-pdf("/scratch/jharrison/Seongmi/WGBS/May_DMR/analysis/DMR_DUC_pbs_infection_log2_fc_DMR_promoter_with_labels.pdf")
+pdf("/WGBS/analysis/DMR_DUC_pbs_infection_log2_fc_DMR_promoter_with_labels.pdf")
 
 
 g <- ggplot(log_fc_df_DMR_promoter_melt , aes(x=WGBS, y=value)) + 
@@ -151,7 +148,7 @@ dev.off()
 
 
 
-tiff("/scratch/jharrison/Seongmi/WGBS/May_DMR/analysis/DMR_DUC_pbs_infection_log2_fc_DMR_promoter_no_labels.tiff", width = 8, height = 6, units = 'in', res = 500, compression = 'lzw')
+pdf("/WGBS/analysis/DMR_DUC_pbs_infection_log2_fc_DMR_promoter_no_labels.pdf", width = 8, height = 6)
 
 
 g <- ggplot(log_fc_df_DMR_promoter_melt , aes(x=WGBS, y=value)) + 
