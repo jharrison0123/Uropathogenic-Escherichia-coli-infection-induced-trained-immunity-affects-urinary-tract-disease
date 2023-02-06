@@ -2,10 +2,10 @@
 # ComplexHeatmap 2.11.2
 # rtracklayer 1.44.4
 # dplyr 1.0.9 
-# devtools)
-# ggplot2)
-# GenomicRanges)
-# GenomicFeatures)
+# devtools 2.2.1 
+# ggplot2 3.3.6
+# GenomicRanges 1.38.0
+# GenomicFeatures 1.38.2 
 
 
 library(ComplexHeatmap)
