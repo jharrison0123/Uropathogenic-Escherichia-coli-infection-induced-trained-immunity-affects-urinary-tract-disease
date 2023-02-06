@@ -1,4 +1,5 @@
 #R-4.1.2
+#DSS v2.43.2
 
 library(DSS)
 require(bsseq)
