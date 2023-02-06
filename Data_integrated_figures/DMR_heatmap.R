@@ -282,6 +282,140 @@ tiff("S_specific_combined_narrow_cluster_FRIP_narrow_with_H3K27me3_broad_norm.ti
 combined
 dev.off()
 
-##Casp1 graph made using bed file with casp1 location
+################################################################################################################################################################
+#                                                                         
+  #                                                                      Casp1 heatmap 
+        
+ ############################################################################################################################################################       
+        
+#uses normalized signal using read coverage and FRIP scores from bigwig files
+
+ # begins after WGBS matrix/heatmap commands: use dmr.mat.wgbs to make WGBS_heatmap
+        
+  dmr.mat <- function(bw.vec, dmr.gr, threads = 5) {
+  df <- utilsFanc::safelapply(names(bw.vec), function(sample) {
+    #browser()
+    bw <- bw.vec[[sample]]
+    data.in.dmr <- rtracklayer::import(con = bw)
+    
+    j <- plyranges::join_overlap_left(dmr.gr, data.in.dmr)
+    
+    df <- j %>% as.data.frame() %>% 
+      dplyr::group_by(dmr.locus) %>% dplyr::summarise(area= sum(score * (end - start))) %>% 
+      dplyr::ungroup() %>% as.data.frame() %>% dplyr::select(dmr.locus, area)
+    colnames(df) <- c("dmr.locus", sample)
+    return(df)
+  }, threads = threads) %>% Reduce(left_join, .)
+  df[is.na(df)] <- 0
+  #browser()
+  rownames(df) <- df$dmr.locus
+  df$dmr.locus <- NULL
+  mat <- as.matrix(df)
+  return(mat)
+}
+
+
+######## Cut&Run ##########
+###########################
+        
+#######  H3K4me3 ######
+#######################
+
+#bigwigs normalized using read coverage and 1/FRIP score
+        
+H3K4Me3_fastq.df <- read.table("/cutandrun/Seongmi/WangT_CutRun/aligned/H3K4Me3_narrow_FRIP_inverse_bw.txt", 
+                    header = T, sep= "\t")[1:6, ]
+H3K4Me3_bw.dir <- "/cutandrun/Seongmi/WangT_CutRun/aligned"
+H3K4Me3_fastq.df$bw <- sapply(H3K4Me3_fastq.df$File.Name, function(x) {
+ H3K4Me3_bw <- Sys.glob(paste0(H3K4Me3_bw.dir, "/*", x))
+})
+
+H3K4Me3_bw.vec <- H3K4Me3_fastq.df$bw
+names(H3K4Me3_bw.vec) <- H3K4Me3_fastq.df$Sample.Name
+H3K4Me3_mat <- dmr.mat(bw.vec = H3K4Me3_bw.vec, dmr.gr = WGBS_DMRs.gr, threads = 10)
+t_H3K4Me3.mat <-  scale((t(as.data.frame(H3K4Me3_mat))), center = F, scale = apply((t(as.data.frame(H3K4Me3_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
+t_H3K4Me3.mat[is.na(t_H3K4Me3.mat)] <- 0
+dimnames(t_H3K4Me3.mat) <- dimnames(H3K4Me3_mat)
+H3K4Me3 <- Heatmap(matrix = (t_H3K4Me3.mat), show_row_names = T ,width = 4, height=5,column_title = "H3K4Me3" , column_title_gp = gpar(fontsize = 10,fontface = "bold") , cluster_columns = FALSE ,column_names_gp = gpar(fontsize = 9), border=T, heatmap_legend_param = list(title = "H3K4Me3"), col = ( c( "white", "darkorange")))
+
+
+############  H3K27Ac ############
+#################################
+        
+H3K27Ac_fastq.df <- read.table("/cutandrun/Seongmi/WangT_CutRun/aligned/H3K27Ac_narrow_FRIP_inverse_bw.txt", 
+                    header = T, sep= "\t")[1:6, ]
+H3K27Ac_bw.dir <- "/cutandrun/Seongmi/WangT_CutRun/aligned"
+
+H3K27Ac_fastq.df$bw <- sapply(H3K27Ac_fastq.df$File.Name, function(x) {
+ H3K27Ac_bw <- Sys.glob(paste0(H3K27Ac_bw.dir, "/*", x))
+})
+
+H3K27Ac_bw.vec <- H3K27Ac_fastq.df$bw
+names(H3K27Ac_bw.vec) <- H3K27Ac_fastq.df$Sample.Name
+H3K27Ac_mat <- dmr.mat(bw.vec = H3K27Ac_bw.vec , dmr.gr = WGBS_DMRs.gr, threads = 16)
+t_H3K27Ac.mat <-scale((t(as.data.frame(H3K27Ac_mat))), center = F, scale = apply((t(as.data.frame(H3K27Ac_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
+t_H3K27Ac.mat[is.na(t_H3K27Ac.mat)] <- 0
+dimnames(t_H3K27Ac.mat) <- dimnames(H3K27Ac_mat)
+H3K27Ac <- Heatmap(matrix = (t_H3K27Ac.mat), width = 4, height=5, show_row_names = T , column_title = "H3K27ac" , column_title_gp = gpar(fontsize = 10,fontface = "bold") , column_names_gp = gpar(fontsize = 9), col = c( "white", "#6C3483"), border=T, cluster_columns = FALSE , heatmap_legend_param = list(title = "H3K27Ac"))
+
+
+
+############  H3K27Me3 ############
+###################################
+        
+H3K27Me3_fastq.df <- read.table("/cutandrun/Seongmi/WangT_CutRun/aligned/H3K27Me3_broad_FRIP_inverse_bw.txt", 
+                    header = T, sep= "\t")[1:6, ]
+H3K27Me3_bw.dir <- "/cutandrun/Seongmi/WangT_CutRun/aligned"
+H3K27Me3_fastq.df$bw <- sapply(H3K27Me3_fastq.df$File.Name, function(x) {
+ H3K27Me3_bw <- Sys.glob(paste0(H3K27Me3_bw.dir, "/*", x))
+ print(H3K27Me3_bw)
+})
+
+H3K27Me3_bw.vec <- H3K27Me3_fastq.df$bw
+names(H3K27Me3_bw.vec) <- H3K27Me3_fastq.df$Sample.Name
+H3K27Me3_mat <- dmr.mat(bw.vec = H3K27Me3_bw.vec, dmr.gr = WGBS_DMRs.gr, threads = 16)
+t_H3K27Me3.mat <-  scale((t(as.data.frame(H3K27Me3_mat))), center = F, scale = apply((t(as.data.frame(H3K27Me3_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
+t_H3K27Me3.mat[is.na(t_H3K27Me3.mat)] <- 0
+dimnames(t_H3K27Me3.mat) <- dimnames(H3K27Me3_mat)
+H3K27Me3 <- Heatmap(matrix = (t_H3K27Me3.mat),width = 4, height=5, show_row_names = T , column_title = "H3K27Me3" ,column_names_gp = gpar(fontsize = 9), column_title_gp = gpar(fontsize = 10,fontface = "bold") , col = c( "white", "darkred"), border=T, cluster_columns = FALSE , heatmap_legend_param = list(title = "H3K27Me3"))
+
+############# ATAC ############
+###############################
+        
+atac_fastq.df <- read.table("/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned/ATAC_narrow_FRIP_inverse_bw.txt", header = T, sep= "\t")[1:6, ]
+atac_bw.dir <- "/Seongmi/cutandrun/Seongmi/WangT_CutRun/aligned"
+
+atac_fastq.df$bw <- sapply(atac_fastq.df$File.Name, function(x) {
+ atac_bw <- Sys.glob(paste0(atac_bw.dir, "/*", x))
+ print(atac_bw)
+})
+
+atac_bw.vec <- atac_fastq.df$bw
+names(atac_bw.vec) <- atac_fastq.df$Sample.Name
+
+atac_mat <-dmr.mat(bw.vec = atac_bw.vec, dmr.gr = WGBS_DMRs.gr, threads = 16)
+
+
+t_atac.mat <-  scale((t(as.data.frame(atac_mat))), center = F, scale = apply((t(as.data.frame(atac_mat))), 2, sd, na.rm = TRUE)) %>% as.data.frame %>% t %>% as.matrix 
+t_atac.mat[is.na(t_atac.mat)] <- 0
+dimnames(t_atac.mat) <- dimnames(atac_mat)
+atac <- Heatmap(matrix = (t_atac.mat), show_row_names = T,width = 4, height=5, column_title = "ATAC" ,column_names_gp = gpar(fontsize = 9), cluster_columns = FALSE , column_title_gp = gpar(fontsize = 10,fontface = "bold") , border=T, heatmap_legend_param = list(title = "ATAC"), col=( c( "white", "#3498DB")))
+ 
+### combine graphs ####
+combined <- WGBS + atac +  H3K27Ac + H3K4Me3 
+combined
+        
+## casp1 is row 188 
+
+tiff("/scratch/jharrison/Seongmi/WGBS/May_DMR/analysis/casp1_DMR_S_specific_intersection_bigwig_combined_root-mean-square_FRIP_norm.pdf", width = 6, height = 4)
+combined[188,]
+dev.off()
+
+
+
+   
+        
+        
+        
 
 
